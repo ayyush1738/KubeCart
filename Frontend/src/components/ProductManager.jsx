@@ -1,57 +1,54 @@
 import React, { useState, useEffect } from 'react';
 
-const API_URL = 'http://<your-ec2-public-ip>:3000/products';
-
 const ProductManager = () => {
   const [products, setProducts] = useState([]);
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
 
-  // Fetch products on component mount
+  // Fetch products from the backend
   useEffect(() => {
-    fetchProducts();
+    fetch('http://<your-ec2-public-ip>/products')
+      .then(response => response.json())
+      .then(data => setProducts(data));
   }, []);
 
-  const fetchProducts = async () => {
-    const response = await fetch(API_URL);
-    const data = await response.json();
-    setProducts(data);
-  };
+  const addProduct = () => {
+    const product = { name, price: parseFloat(price) };
 
-  const addProduct = async () => {
-    const newProduct = { name, price: parseFloat(price) };
-    const response = await fetch(API_URL, {
+    fetch('http://<your-ec2-public-ip>/products', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newProduct),
-    });
-    if (response.ok) {
-      fetchProducts();
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(product)
+    }).then(() => {
       setName('');
       setPrice('');
-    }
+      fetch('http://<your-ec2-public-ip>/products')
+        .then(response => response.json())
+        .then(data => setProducts(data));
+    });
   };
 
   return (
     <div>
-      <h2>Product Manager</h2>
+      <h2>Manage Products</h2>
       <input
         type="text"
-        placeholder="Product Name"
         value={name}
+        placeholder="Product Name"
         onChange={(e) => setName(e.target.value)}
       />
       <input
         type="number"
-        placeholder="Product Price"
         value={price}
+        placeholder="Product Price"
         onChange={(e) => setPrice(e.target.value)}
       />
       <button onClick={addProduct}>Add Product</button>
-
       <ul>
-        {products.map((product) => (
-          <li key={product.id}>
+        {products.map((product, index) => (
+          <li key={index}>
             {product.name} - ${product.price}
           </li>
         ))}
