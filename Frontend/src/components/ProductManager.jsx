@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Card from './Cards';
 
 const ProductManager = () => {
   const [products, setProducts] = useState([]);
@@ -31,9 +32,28 @@ const ProductManager = () => {
   };
 
   return (
-    <div>
-      <h2>Manage Products</h2>
-      <input
+    <div className='mt-20 bg-gray-900'>
+      <h1 className="text-4xl font-bold text-white">Products</h1>
+      <div className='row flex justify-between p-10'>
+        <Card />
+        <Card />
+        <Card />
+        <Card />
+      </div>
+      <div className='row flex justify-between p-10'>
+        <Card />
+        <Card />
+        <Card />
+        <Card />
+      </div>
+      <div className='row flex justify-between p-10'>
+        <Card />
+        <Card />
+        <Card />
+        <Card />
+      </div>
+
+      {/* <input
         type="text"
         value={name}
         placeholder="Product Name"
@@ -52,7 +72,7 @@ const ProductManager = () => {
             {product.name} - ${product.price}
           </li>
         ))}
-      </ul>
+      </ul> */}
     </div>
   );
 };
